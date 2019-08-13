@@ -71,9 +71,12 @@ From the overview [here](https://www.midi.org/17-the-mma/99-web-midi):
 ## Our app 
 
 - based on Vue CLI **template tbd** 
+  - webmidi.js
+  - abcjs? 
 - using Drumbot and Melodybot endpoints 
 - minimal UI 
 - focused on sending MIDI to hardware 
+- 
 
 ## Our hardware 
 
