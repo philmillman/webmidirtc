@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <h2>{{ tracks.drums.name }} - {{ tracks.melody.generator }}, BPM: {{ bpm || tracks.drums.beatsPerMinute }}</h2>
+    <h1>#hamontjs - web midi demo</h1>
+    <h2>{{ tracks.drums.name }} - {{ tracks.melody.generator }}, {{ loops }}X @ {{ bpm || tracks.drums.beatsPerMinute }} bpm</h2>
     <select v-model="selectedDrumPattern" @change="getDrumBotData(selectedDrumPattern)">
       <option
         v-for="option in drumbotOptions"
@@ -21,18 +22,13 @@
     <button @click="getMelodyData(selectedMelodyGenerator)">Get Melody</button>
     <br />
     <label for="bpm-override">BPM Override</label>
-    <input
-      type="number"
-      step="5"
-      min="60"
-      max="300"
-      v-model="bpm"
-      title="bpm override!!"
-      name="bpm-override"
-    />
+    <input type="number" step="5" min="0" max="300" v-model="bpm" name="bpm-override" />
     <br />
-    <button @click="play()">NOOPS!!</button>
-    <button @click="playRandom()">I'm feeling random</button>
+    <label for="loop-override">Loop Override</label>
+    <input type="number" step="1" min="1" max="20" v-model="loops" name="loop-override" />
+    <br />
+    <button @click="play()">▶</button>
+    <button @click="getRandom()">🎲</button>
   </div>
 </template>
 
@@ -45,7 +41,6 @@ const DRUMBRUTE_MIDI_CHANNEL = "10";
 const MICROFREAK_MIDI_CHANNEL = "2";
 
 import WebMidi from "webmidi";
-import { setInterval } from "timers";
 import { bruteMap } from "../utils/drumMap";
 
 export default {
@@ -56,12 +51,12 @@ export default {
       melodybotOptions: [],
       selectedDrumPattern: "",
       selectedMelodyGenerator: "",
+      loops: 1,
       bpm: 0,
       tracks: {
         drums: {},
         melody: {}
-      },
-      playing: false
+      }
     };
   },
   created: function() {
@@ -96,7 +91,7 @@ export default {
         .then(response => response.json())
         .then(data => (this.tracks.melody = data));
     },
-    playRandom: function() {
+    getRandom: function() {
       const randomMelody = this.melodybotOptions[
         Math.floor(Math.random() * this.melodybotOptions.length)
       ].name;
@@ -108,27 +103,16 @@ export default {
       this.getDrumBotData(randomDrums);
     },
     play: function() {
-      var vm = this;
-      this.playing = !this.playing;
-
-      if (!this.playing) {
-        WebMidi.disable();
-        return;
-      }
-
       WebMidi.enable(err => {
         if (err) {
+          // eslint-disable-next-line
           console.log("WebMidi could not be enabled.", err);
         } else {
+          // eslint-disable-next-line
           console.log("WebMidi enabled!");
         }
 
-        console.log("Inputs: ", WebMidi.inputs);
-        console.log("Outputs: ", WebMidi.outputs);
-
         const output = WebMidi.outputs[0];
-
-        output.sendStart();
 
         const BPM = this.bpm || this.tracks.drums.beatsPerMinute;
         const DRUMSTEPS = this.tracks.drums.stepCount;
@@ -136,70 +120,52 @@ export default {
         const STEPS_PER_SECOND = (BPM / 60) * 4;
         const STEP_DURATION_MS = (1 / STEPS_PER_SECOND) * 1000;
 
-        setInterval(() => {
-          output.sendClock();
-        }, (60000 / BPM) * 24);
-
-        this.tracks.melody.notes.map((note, index) => {
-          output.playNote(note.name, MICROFREAK_MIDI_CHANNEL, {
-            duration: note.duration * STEP_DURATION_MS,
-            time: `+${note.start * STEP_DURATION_MS}`
+        // fake looping by sending multiple 'loops'
+        for (let i = 0; i < this.loops; i++) {
+          this.tracks.melody.notes.map(note => {
+            output.playNote(note.name, MICROFREAK_MIDI_CHANNEL, {
+              duration: note.duration * STEP_DURATION_MS,
+              time: `+${MELODYSTEPS * i * STEP_DURATION_MS +
+                note.start * STEP_DURATION_MS}`
+            });
           });
-          console.log(
-            `${index}  Note`,
-            note.name,
-            `duration ${note.duration * STEP_DURATION_MS}`,
-            `OFFSET ${note.start * STEP_DURATION_MS}`
-          );
-        });
 
-        this.tracks.drums.tracks.map((track, index) => {
-          track.steps.map((step, stepIndex) => {
-            console.log(
-              `${track.instrument} ${stepIndex}`,
-              `duration ${STEP_DURATION_MS * step}`,
-              `OFFSET ${stepIndex * STEP_DURATION_MS}`
-            );
-
-            output.playNote(
-              bruteMap[track.instrument].note,
-              DRUMBRUTE_MIDI_CHANNEL,
-              {
-                duration: STEP_DURATION_MS * step,
-                time: `+${stepIndex * STEP_DURATION_MS}`,
-                velocity: 1 * step
-              }
-            );
+          this.tracks.drums.tracks.map(track => {
+            track.steps.map((step, stepIndex) => {
+              output.playNote(
+                bruteMap[track.instrument].note,
+                DRUMBRUTE_MIDI_CHANNEL,
+                {
+                  duration: STEP_DURATION_MS * step,
+                  time: `+${MELODYSTEPS * i * STEP_DURATION_MS +
+                    stepIndex * STEP_DURATION_MS}`,
+                  velocity: 1 * step
+                }
+              );
+            });
           });
-        });
 
-        // DOUBLE UP DRUMS SEQ IS SAME LENGTH
+          // DOUBLE UP DRUMS SO SEQ IS SAME LENGTH
 
-        this.tracks.drums.tracks.map((track, index) => {
-          track.steps.map((step, stepIndex) => {
-            console.log(
-              `${track.instrument} ${stepIndex}`,
-              `duration ${STEP_DURATION_MS * step}`,
-              `OFFSET ${stepIndex * STEP_DURATION_MS + 16 * STEP_DURATION_MS}`
-            );
-
-            output.playNote(
-              bruteMap[track.instrument].note,
-              DRUMBRUTE_MIDI_CHANNEL,
-              {
-                duration: STEP_DURATION_MS * step,
-                time: `+${stepIndex * STEP_DURATION_MS +
-                  16 * STEP_DURATION_MS}`,
-                velocity: 1 * step
-              }
-            );
+          this.tracks.drums.tracks.map(track => {
+            track.steps.map((step, stepIndex) => {
+              output.playNote(
+                bruteMap[track.instrument].note,
+                DRUMBRUTE_MIDI_CHANNEL,
+                {
+                  duration: STEP_DURATION_MS * step,
+                  time: `+${MELODYSTEPS * i * STEP_DURATION_MS +
+                    stepIndex * STEP_DURATION_MS +
+                    DRUMSTEPS * STEP_DURATION_MS}`,
+                  velocity: 1 * step
+                }
+              );
+            });
           });
-        });
-
-        output.sendStop();
+        }
       });
 
-      // WebMidi.disable(); //hacky, fix this
+      WebMidi.disable();
     }
   }
 };

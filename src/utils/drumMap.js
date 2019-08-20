@@ -8,10 +8,10 @@ export const bruteMap = {
   rim: {
     note: 38,
   },
-  tom1: {
+  tomh: {
     note: 39,
   },
-  tom2: {
+  toml: {
     note: 40,
   },
   ride: {

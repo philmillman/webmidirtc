@@ -62,7 +62,7 @@ From the overview [here](https://www.midi.org/17-the-mma/99-web-midi):
 - You have a basic understanding of the command line (CLI)
 - You have listened to music at some point
 
-> if any of this is unfamiliar, I'll be happy to answer any questions at the end
+> if any of this is unfamiliar, I'll do my best to answer any questions at the end
 
 --
 
@@ -70,9 +70,8 @@ From the overview [here](https://www.midi.org/17-the-mma/99-web-midi):
 
 ## Our app
 
-- based on Vue CLI **template tbd**
+- based on Vue CLI
   - webmidi.js
-  - abcjs?
 - using Drumbot and Melodybot endpoints
 - minimal UI
 - focused on sending MIDI to hardware
@@ -84,17 +83,14 @@ From the overview [here](https://www.midi.org/17-the-mma/99-web-midi):
 - Arturia MicroFreak
 - Focusrite Scarlett 18i8 gen 3
 
-TODO INSERT WIRING DIAGRAM and Photos
-
 - computer (usb)=> scarlett (midi) => microfreak (midi)=> drumbrute
 
 ## Flow
 
 1. Fetch drum and melody data
-2. Transform into MIDI friendly format
-3. Send to hardware
-4. Hardware plays sound
-5. Repeat!!
+2. Send MIDI notes to hardware
+3. Hardware plays sound
+4. Repeat!!
 
 --
 
@@ -102,7 +98,7 @@ TODO INSERT WIRING DIAGRAM and Photos
 
 1. Show Working App
 2. Show a few variants
-3. Show Vue devtools as a "DAW"
+3. Show Vue devtools as a simple editor
 
 --
 
@@ -112,10 +108,15 @@ TODO INSERT WIRING DIAGRAM and Photos
 
 # Closing
 
+## Creativity
+
+- constraints create creativity
+- focus on tweaking hardware
+
 ## Gotchas
 
 - Wiring order matters (not sure why yet)
-- Essentially have to implement a basic sequencer
+- Sequencing is hard
 - RTFM
 
 --
@@ -127,3 +128,5 @@ TODO INSERT WIRING DIAGRAM and Photos
 - awesome webmidi apps
 
 # Thank you!!
+
+@philmillman - [themillman.com](https://themillman.com)
