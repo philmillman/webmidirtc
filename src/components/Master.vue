@@ -33,7 +33,7 @@
 </template>
 
 <script>
-// TODO MOVE THIS INTO UTIL
+// TODO MOVE THIS INTO config
 const DRUMBOT_URL = "https://api.noopschallenge.com/drumbot/patterns";
 const MELODYBOT_URL = "https://api.noopschallenge.com/melodybot/";
 
@@ -41,7 +41,7 @@ const DRUMBRUTE_MIDI_CHANNEL = "10";
 const MICROFREAK_MIDI_CHANNEL = "2";
 
 import WebMidi from "webmidi";
-import { bruteMap } from "../utils/drumMap";
+import { bruteMap } from "../config/drumMap";
 
 export default {
   name: "Master",
