@@ -168,7 +168,7 @@ export default {
         }
       });
 
-      // WebMidi.disable();
+      WebMidi.disable();
     }
   }
 };
