@@ -6,7 +6,7 @@ revealOptions:
 ---
 # Noops!...I Did It Again
 
-## Fun with WebMidi
+## Fun with Web MIDI
 
 ---
 
@@ -55,6 +55,12 @@ From the overview [here](https://www.midi.org/17-the-mma/99-web-midi):
 - Updates are automatic. No need to install new versions, the latest version is always available at the website URL.
 - Accessible anywhere. Apps and data in "the Cloud" are available anywhere you have an internet connection.
 - It's the Internet! Browsers make it easy to connect you and your music to other people via social media and on-line MIDI communities.
+
+----
+
+## Browser Support
+
+[caniuse](https://caniuse.com/#feat=midi)
 
 ---
 
@@ -164,7 +170,7 @@ computer (usb) => scarlett (midi) => microfreak (midi) => drumbrute
 
 - [this presentation](https://github.com/philmillman/hamontjs-webmidi/blob/master/overview.md)
 - [github repo for sample app](https://github.com/philmillman/hamontjs-webmidi)
-- awesome webmidi apps
+- [awesome webmidi apps](https://www.midi.org/17-the-mma/99-web-midi)
 
 ---
 
@@ -174,4 +180,4 @@ computer (usb) => scarlett (midi) => microfreak (midi) => drumbrute
 
 ## Thank you!!
 
-@philmillman - [themillman.com](https://themillman.com)
+[@philmillman](https://twitter.com/philmillman) - [themillman.com](https://themillman.com)

@@ -83,7 +83,10 @@ export default {
       this.selectedDrumPattern = name;
       fetch(DRUMBOT_URL + `/${name}`)
         .then(response => response.json())
-        .then(data => (this.tracks.drums = data));
+        .then(data => {
+          this.tracks.drums = data;
+          this.bpm = this.tracks.drums.beatsPerMinute;
+        });
     },
     getMelodyData: function(generator = "arpeggio") {
       this.selectedMelodyGenerator = generator;
@@ -101,6 +104,7 @@ export default {
 
       this.getMelodyData(randomMelody);
       this.getDrumBotData(randomDrums);
+      this.bpm = this.tracks.drums.beatsPerMinute;
     },
     play: function() {
       WebMidi.enable(err => {
@@ -112,7 +116,8 @@ export default {
           console.log("WebMidi enabled!");
         }
 
-        const output = WebMidi.outputs[0];
+        //use the first MIDI output device, TODO make this selectable
+        const output = WebMidi.outputs[0]; 
 
         const BPM = this.bpm || this.tracks.drums.beatsPerMinute;
         const DRUMSTEPS = this.tracks.drums.stepCount;
@@ -142,13 +147,8 @@ export default {
                   velocity: 1 * step
                 }
               );
-            });
-          });
 
-          // DOUBLE UP DRUMS SO SEQ IS SAME LENGTH
-
-          this.tracks.drums.tracks.map(track => {
-            track.steps.map((step, stepIndex) => {
+            // DOUBLE UP DRUMS SO SEQ IS SAME LENGTH
               output.playNote(
                 bruteMap[track.instrument].note,
                 DRUMBRUTE_MIDI_CHANNEL,
@@ -160,12 +160,15 @@ export default {
                   velocity: 1 * step
                 }
               );
+
             });
           });
+
+          
         }
       });
 
-      WebMidi.disable();
+      // WebMidi.disable();
     }
   }
 };
