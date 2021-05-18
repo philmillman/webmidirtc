@@ -7,7 +7,7 @@
       </div>
       <div class="call-controls">
 
-        <button @click="joinCall()">Join</button>
+        <button @click="joinCall()" :disabled="joined">Join</button>
       </div>
     </div>
     <div class="controls-container">
@@ -22,17 +22,37 @@
         <button @click="controlMessage('prog2')">2</button>
         <button @click="controlMessage('prog3')">3</button>
         <button @click="controlMessage('prog4')">4</button>
-        <h3>Tracks</h3>
+        <h3>Digitone Tracks</h3>
         Mute
-        <button @click="controlMessage('mute1')">1</button>
-        <button @click="controlMessage('mute2')">2</button>
-        <button @click="controlMessage('mute3')">3</button>
-        <button @click="controlMessage('mute4')">4</button>
+        <button @click="controlMessage('muteDN', 1)">1</button>
+        <button @click="controlMessage('muteDN', 2)">2</button>
+        <button @click="controlMessage('muteDN', 3)">3</button>
+        <button @click="controlMessage('muteDN', 4)">4</button>
         Unmute
-        <button @click="controlMessage('unmute1')">1</button>
-        <button @click="controlMessage('unmute2')">2</button>
-        <button @click="controlMessage('unmute3')">3</button>
-        <button @click="controlMessage('unmute4')">4</button>
+        <button @click="controlMessage('unmuteDN', 1)">1</button>
+        <button @click="controlMessage('unmuteDN', 2)">2</button>
+        <button @click="controlMessage('unmuteDN', 3)">3</button>
+        <button @click="controlMessage('unmuteDN', 4)">4</button>
+        <h3>Digitakt Tracks</h3>
+        Mute
+        <button @click="controlMessage('muteDT', 1)">1</button>
+        <button @click="controlMessage('muteDT', 2)">2</button>
+        <button @click="controlMessage('muteDT', 3)">3</button>
+        <button @click="controlMessage('muteDT', 4)">4</button>
+        <button @click="controlMessage('muteDT', 5)">5</button>
+        <button @click="controlMessage('muteDT', 6)">6</button>
+        <button @click="controlMessage('muteDT', 7)">7</button>
+        <button @click="controlMessage('muteDT', 8)">8</button>
+
+        Unmute
+        <button @click="controlMessage('unmuteDT', 1)">1</button>
+        <button @click="controlMessage('unmuteDT', 2)">2</button>
+        <button @click="controlMessage('unmuteDT', 3)">3</button>
+        <button @click="controlMessage('unmuteDT', 4)">4</button>
+        <button @click="controlMessage('unmuteDT', 5)">5</button>
+        <button @click="controlMessage('unmuteDT', 6)">6</button>
+        <button @click="controlMessage('unmuteDT', 7)">7</button>
+        <button @click="controlMessage('unmuteDT', 8)">8</button>
       </div>
       <div>
         <h2>Delay</h2>
@@ -125,11 +145,13 @@ export default {
   data: function() {
     return {
       devices: [],
-      output: {},
+      outputDN: {},
+      outputDT: {},
       localMidi: false,
       participants: [],
       localParticipant: {},
       callframe: {},
+      joined: false,
       message: '',
     };
   },
@@ -157,11 +179,10 @@ export default {
       .on('participant-left', (e) => {
         console.log("Event: ",e);
         this.updateParticipants();
-        this.updateRaisedHands({handState: false, ...e.participant});
       })
       .on('app-message', ({ data }) => {
         console.log("message: ", data);
-        this.flashMessage(data);
+        this.flashMessage(data.message);
         if (this.localMidi) {
           this.controlMessage(data.name, data.val);
         }
@@ -173,7 +194,12 @@ export default {
       const urlParams = new URLSearchParams(window.location.search)
       const token = urlParams.get("token") || '';
       this.participants = await this.callframe.join({ token });
-      this.localParticipant = participants.local;
+      this.localParticipant = this.participants.local;
+      if (!this.localParticipant.owner) {
+        //hack for remote participants w/ midi devices
+        this.localMidi = false;
+      }
+      this.joined = true;
     },
     getDevices: function() {
       WebMidi.enable(err => {
@@ -184,37 +210,32 @@ export default {
         }
 
         this.devices = WebMidi.outputs;
-        this.output = this.devices[0];
+        this.outputDT = WebMidi.getOutputByName("Elektron Digitakt");
+        this.outputDN = WebMidi.getOutputByName("Elektron Digitone");
         // TODO add owner check
-        this.localMidi = this.output ? true : false;
+        this.localMidi = this.outputDN ? true : false;
       })
-    },
-    sendMidiCC: function(cc, value, chan) {
-      this.output.sendControlChange(cc, value, chan)
-    },
-    muteTrack: function(cc,chan) {
-      // refactor to be device agnostic
-      this.mutes[chan] = this.mutes[chan] ? 0 : 127;
-      this.sendMidiCC(cc, this.mutes[chan], chan)
     },
     updateParticipants: async function () {
       const participants =  await this.callframe.participants();
       this.participants = Object.keys(participants).map((key) => participants[key]);
     },
-    flashMessage: function (data) {
-      this.message = `Someone changed ${data.name}`
+    flashMessage: function (msg) {
+      this.message = msg;
       setTimeout(() => this.message = '', 5000)
     }, 
     controlMessage: function (name, val = false) {
       if (this.localMidi) {
+        const device = msgMap[name].device;
+        console.log("device: ", device)
         if (val) {
-          this.output[msgMap[name].method](...msgMap[name].params(val) || '')
+          this[device][msgMap[name].method](...msgMap[name].params(val) || '')
         } else {
-          this.output[msgMap[name].method](...msgMap[name].params || '')
+          this[device][msgMap[name].method](...msgMap[name].params || '')
         }
       } else {
         this.callframe.sendAppMessage(
-          { name, val },
+          { name, val, message: msgMap[name].message },
           "*"
         )
       }
