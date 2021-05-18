@@ -178,6 +178,12 @@ export default {
         console.log("Event: ",e);
         this.updateParticipants();
       })
+      .on('left-meeting', (e) => {
+        console.log("Event: ",e);
+        this.participants = [];
+        this.localParticipant;
+        this.joined = false;
+      })
       .on('app-message', ({ data }) => {
         console.log("message: ", data);
         this.flashMessage(data.message);
