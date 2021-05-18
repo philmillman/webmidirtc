@@ -3,20 +3,18 @@
   <div class="page-container">
     <div class="daily-call-container">
       <div id="call-wrapper">
-
-      </div>
-      <div class="call-controls">
-
-        <button @click="joinCall()" :disabled="joined">Join</button>
       </div>
     </div>
     <div class="controls-container">
       <h1>WebMIDIRTC</h1>
       <span class="flash-message">{{message}}</span>
       <div>
+      <div class="call-controls">
+        <button @click="joinCall()" :disabled="joined">Join</button>
+      </div>
         <h2>Playback</h2>
         <button @click="controlMessage('play')">▶</button>
-        <button @click="controlMessage('stop')">🛑</button>
+        <button @click="controlMessage('stop')">⬛</button>
         <h3>Patterns</h3>
         <button @click="controlMessage('prog1')">1</button>
         <button @click="controlMessage('prog2')">2</button>
@@ -257,10 +255,6 @@ export default {
   .daily-call-container {
     width: 50%;
     display: flex;
-  }
-
-  .call-controls {
-    margin-top: 80%;
   }
   .page-container{
     display: flex;
