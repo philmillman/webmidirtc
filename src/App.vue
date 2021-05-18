@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <Master string="test" />
+    <Main />
   </div>
 </template>
 
 <script>
-import Master from './components/Master.vue'
+import Main from './components/Main.vue'
 
 export default {
   name: 'app',
   components: {
-    Master
+    Main,
   }
 }
 </script>
@@ -23,5 +23,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
 }
 </style>

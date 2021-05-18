@@ -1,5 +1,5 @@
 {
-  "name": "web-midi-talk-2019-08-22",
+  "name": "webmidirtc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@daily-co/daily-js": "^0.13.0",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "webmidi": "^2.3.3"
