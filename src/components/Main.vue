@@ -5,8 +5,10 @@
       <div class="daily-call" id="call-wrapper"></div>
     </div>
     <div class="controls-container">
-      <span class="flash-message">{{ message }}</span>
       <div class="main-controls">
+        <p class="flash-message">
+          {{ message || "[See incoming changes here]" }}
+        </p>
         <div class="call-controls">
           <div class="daily-controls">
             <h3>Call controls</h3>
@@ -354,6 +356,11 @@ main.page-container {
   display: flex;
   flex: 1;
   width: 100%;
+}
+.flash-message {
+  text-align: left;
+  margin-top: 0;
+  font-style: italic;
 }
 h3 {
   text-align: left;
