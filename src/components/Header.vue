@@ -43,4 +43,9 @@ header {
   height: 24px;
   margin-left: 16px;
 }
+@media only screen and (max-width: 525px) {
+  header {
+    margin: 16px 0 4px;
+  }
+}
 </style>

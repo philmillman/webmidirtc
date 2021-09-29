@@ -180,7 +180,6 @@ const CALL_OPTIONS = {
   url: ROOM_URL,
   showLeaveButton: true,
   iframeStyle: {
-    width: "100%",
     aspectRatio: 16 / 10,
     border: "1px solid #e6eaef",
     borderRadius: "6px 6px 0 0",
@@ -313,6 +312,10 @@ main.page-container {
   width: 100%;
   flex: 1;
   margin: 12px 48px;
+}
+.call-wrapper {
+  display: flex;
+  margin-bottom: 32px;
 }
 .controls-container {
   width: 50%;
@@ -458,5 +461,70 @@ input[type="range"]::-webkit-slider-runnable-track {
 
 .transparent {
   color: transparent;
+}
+
+iframe {
+  width: 100%;
+  height: auto;
+}
+
+@media only screen and (max-width: 1025px) {
+  main.page-container {
+    flex-direction: column;
+  }
+  iframe {
+    width: 424px;
+  }
+  .controls-container {
+    align-items: flex-start;
+  }
+  .call-wrapper {
+    display: flex;
+  }
+  .daily-call {
+    display: flex;
+  }
+  iframe {
+    margin-right: auto;
+    margin-bottom: 32px;
+  }
+}
+@media only screen and (max-width: 525px) {
+  main.page-container {
+    flex-direction: column;
+    margin: 8px;
+  }
+  iframe {
+    width: 90%;
+  }
+  .controls-container,
+  .main-controls {
+    width: 90%;
+  }
+  .call-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .controls-container {
+    align-items: flex-start;
+  }
+  .column-section {
+    flex-direction: column-reverse;
+  }
+  .column-section > div:nth-child(2) {
+    padding: 0;
+  }
+  .button-container {
+    flex-wrap: wrap;
+  }
+  .button-container button {
+    margin-bottom: 4px;
+  }
+  .transparent {
+    display: none;
+  }
+  h3 {
+    margin: 16px 0 4px;
+  }
 }
 </style>
