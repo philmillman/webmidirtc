@@ -4,9 +4,9 @@ This project is meant to demonstrate controlling hardware synths using Web MIDI 
 
 This initial version was designed to be used with Elektron's Digitakt and Digitone. See [MIDI-Setup](#hardware-and-midi-setup) below for the hardware specific configuration. 
 
-You can find MIDI command mappings in [`controlMap.js`](src/lib/controlMap). 
+You can find MIDI command mappings in [`controlMap.js`](https://github.com/philmillman/webmidirtc/blob/main/src/lib/controlMap.js). 
 
-Most of the logic lives in [`Main.vue`](src/components/Main.vue) for now. It will get moved into smaller components in the future. 
+Most of the logic lives in [`Main.vue`](https://github.com/philmillman/webmidirtc/blob/main/src/components/Main.vue) for now. It will get moved into smaller components in the future. 
 
 > This is definitely a work in progress, so PRs are welcome. 
 
