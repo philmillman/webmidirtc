@@ -4,7 +4,7 @@ This project is meant to demonstrate controlling hardware synths using Web MIDI 
 
 This initial version was designed to be used with Elektron's Digitakt and Digitone. See [MIDI-Setup](#hardware-and-midi-setup) below for the hardware specific configuration. 
 
-You can find MIDI command mappings for the drum machine in [`src/controlMap`](src/controlMap). 
+You can find MIDI command mappings in [`controlMap.js`](src/lib/controlMap). 
 
 Most of the logic lives in [`Main.vue`](src/components/Main.vue) for now. It will get moved into smaller components in the future. 
 
